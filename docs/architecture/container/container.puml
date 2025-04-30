@@ -1,0 +1,50 @@
+@startuml ContainersDiagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Диаграмма контейнеров
+
+Person(owner, "Владелец дома", "Пользователь системы")
+Person(support_agent, "Агент поддержки", "Сотрудник компании")
+Person(admin, "Администратор", "Сотрудник компании")
+Person(martket_agent, "Маркетолог", "Сотрудник компании")
+
+
+System_Boundary(ecosystem, "Экосистема") {
+    Container(web, "Веб-приложение", "Angular", "SPA интерфейс управления")
+    Container(web2, "Веб-приложение", "Angular", "SPA интерфейс для сотрудников")
+    Container(support, "Сервис поддержки", "Go", "Тикеты и обратная связь")
+    Container(mobile, "Мобильное приложение", "Ionic + Angular", "Управление на смартфоне")
+    Container(api, "API Gateway", "", "Маршрутизация запросов")
+    Container(device_mgmt, "Сервис управления устройствами", "Java", "Подключение/настройка устройств")
+    Container(automation, "Сервис сценариев", "Python", "Выполнение автоматизации")
+    Container(telemetry, "Сервис телеметрии", "Go", "Сбор и анализ данных")
+    Container(analytics, "Сервис аналитики", "Python", "Маркетинговая аналитика")
+    ContainerDb(db, "База данных", "PostgreSQL", "Хранение пользовательских данных, тикетов")
+    ContainerDb(tsdb, "Хранилище телеметрии", "TimescaleDB", "Метрики устройств")
+}
+
+System_Ext(partner_devices, "Устройства партнеров", "Zigbee/MQTT устройства")
+System_Ext(email, "Notification-сервис", "Отправка уведомлений")
+
+
+Rel(owner, web, "Использует")
+Rel(support_agent, web2, "Работает с тикетами")
+Rel(martket_agent, web2, "Смотрит метрики")
+Rel(admin, web2, "Читает логи, смотрит метрики, администрирует пользователей")
+Rel(owner, mobile, "Использует")
+Rel(web, api, "Вызывает API", "HTTPS")
+Rel(web2, api, "Вызывает API", "HTTPS")
+Rel(mobile, api, "Вызывает API", "HTTPS")
+Rel(api, device_mgmt, "gRPC")
+Rel(api, automation, "gRPC")
+Rel(api, telemetry, "gRPC")
+Rel(device_mgmt, partner_devices, "MQTT/Zigbee")
+Rel(device_mgmt, db, "Чтение/запись")
+Rel(telemetry, tsdb, "Запись метрик", "SQL")
+Rel(analytics, tsdb, "Анализ данных", "SQL")
+Rel(api, support, "gRPC")
+Rel(support, email, "Отправляет уведомления", "SMTP")
+Rel(support, device_mgmt, "Запрашивает данные устройств", "gRPC")
+Rel(support, db, "Сохраняет тикеты", "SQL")
+
+@enduml

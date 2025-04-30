@@ -1,0 +1,24 @@
+@startuml SupportServiceComponents
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Сервис поддержки
+
+Container_Boundary(support, "Сервис поддержки (Go)") {
+    Component(ticket_api, "Ticket API", "REST/gRPC", "Прием запросов от пользователей")
+    Component(feedback, "Feedback Engine", "Сбор и анализ отзывов")
+    Component(chatbot, "Чат-бот", "Интеграция с Telegram/WhatsApp")
+    Component(device_helper, "Device Helper", "Помощь в подключении устройств")
+    Component(notifier, "Notifier", "Уведомления агентов")
+}
+
+ContainerDb(db, "PostgreSQL", "Тикеты и отзывы")
+System_Ext(device_service, "Сервис устройств", "gRPC")
+System_Ext(email, "Notification-сервис", "SMTP")
+
+Rel(ticket_api, db, "Сохраняет тикеты", "SQL")
+Rel(feedback, db, "Анализирует отзывы", "SQL")
+Rel(device_helper, device_service, "Запрашивает данные", "gRPC")
+Rel(notifier, email, "Отправляет письма", "SMTP")
+Rel(chatbot, ticket_api, "Создает тикеты", "JSON")
+
+@enduml

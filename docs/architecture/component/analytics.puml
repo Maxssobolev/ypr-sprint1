@@ -1,0 +1,20 @@
+@startuml AnalyticsServiceComponents
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Сервис аналитики
+
+Container_Boundary(analytics, "Сервис аналитики (Python)") {
+    Component(etl, "ETL-пайплайн", "Извлечение данных")
+    Component(reports, "Генератор отчетов", "Агрегация по правилам")
+    Component(segmentation, "Сегментация", "Кластеризация пользователей")
+    Component(api, "REST API", "Дашборды")
+}
+
+ContainerDb(timescale, "TimescaleDB", "Метрики")
+ContainerDb(postgres, "PostgreSQL", "Пользователи")
+
+Rel(etl, timescale, "Чтение метрик", "SQL")
+Rel(etl, postgres, "Данные пользователей", "SQL")
+Rel(segmentation, api, "Рекомендации", "JSON")
+
+@enduml

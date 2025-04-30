@@ -1,0 +1,37 @@
+@startuml APIGateway_Code_Diagram
+title API Gateway
+
+class APIGateway {
+  +Router router
+  +AuthMiddleware auth
+  +GRPCClients grpcClients
+  +void Start()
+}
+
+class Router {
+  -chi.Router chiRouter
+  +void AddRoute(path string, handler http.HandlerFunc)
+  +void ServeHTTP(w http.ResponseWriter, r *http.Request)
+}
+
+class AuthMiddleware {
+  -JWTSecret string
+  +http.HandlerFunc Middleware(next http.Handler) http.Handler
+  +bool ValidateToken(token string) 
+}
+
+class GRPCClients {
+  -map[string]*grpc.ClientConn connections
+  +pb.DeviceServiceClient GetDeviceClient() 
+  +pb.AuthServiceClient GetAuthClient()
+}
+
+class Cache {
+  -redis.Client redisClient
+  +string Get(key string)
+  +void Set(key string, value string, ttl time.Duration)
+}
+
+APIGateway "1" *-- "1" Router : содержит
+APIGateway "1" *-- "1" AuthMiddleware : использует
+APIGateway "1" *-- "1" GRPCClients : управляет

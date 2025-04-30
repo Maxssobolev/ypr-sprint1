@@ -1,0 +1,24 @@
+@startuml ContextDiagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Диаграмма контекста - Экосистема умных поселков
+
+Person(owner, "Владелец дома", "Пользователь системы умного дома")
+Person(admin, "Администратор", "Технический специалист компании")
+Person(support_agent, "Агент поддержки", "Сотрудник компании")
+Person(market_agent, "Маркетолог", "Сотрудник компании")
+System(ecosystem, "Экосистема умных поселков", "SaaS-платформа для управления IoT устройствами")
+
+System_Ext(partner_devices, "Устройства партнеров", "Сторонние IoT устройства")
+System_Ext(payment, "Платежная система", "Внешняя система обработки платежей")
+System_Ext(email, "Notification-сервис", "Отправка уведомлений")
+
+Rel(owner, ecosystem, "Управляет устройствами, создает сценарии, просматривает телеметрию")
+Rel(admin, ecosystem, "Настраивает систему, анализирует метрики")
+Rel(support_agent, ecosystem, "Работает с запросами от пользователей")
+Rel(market_agent, ecosystem, "Работает с метриками, продвигает новые модульные комплекты")
+Rel(ecosystem, partner_devices, "Подключает по стандартным протоколам (Zigbee/MQTT)")
+Rel(ecosystem, payment, "Интегрируется для SaaS-подписок")
+Rel(ecosystem, email, "Интегрируется для рассылки уведомлений")
+
+@enduml

@@ -1,0 +1,107 @@
+@startuml ER_Diagram
+skinparam linetype ortho
+
+' Сущности и их атрибуты
+entity "Пользователь" as user {
+  * id: uuid <<PK>>
+  --
+  * email: varchar(255)
+  * password_hash: varchar(255)
+  * full_name: varchar(255)
+  * phone: varchar(20)
+  * created_at: timestamp
+  * last_login: timestamp
+}
+
+entity "Устройство" as device {
+  * id: uuid <<PK>>
+  --
+  * name: varchar(255)
+  * type: enum('sensor', 'actuator', 'camera')
+  * protocol: enum('zigbee', 'mqtt', 'http')
+  * status: enum('online', 'offline', 'error')
+  * last_seen: timestamp
+  * owner_id: uuid <<FK>>
+}
+
+entity "Группа устройств" as device_group {
+  * id: uuid <<PK>>
+  --
+  * name: varchar(255)
+  * description: text
+  * created_by: uuid <<FK>>
+  * devices: []uuid <<FK>>
+}
+
+entity "Телеметрия" as telemetry {
+  * id: uuid <<PK>>
+  --
+  * device_id: uuid <<FK>>
+  * metric_type: varchar(50)
+  * value: double precision
+  * timestamp: timestamp
+}
+
+entity "Сценарий" as automation {
+  * id: uuid <<PK>>
+  --
+  * name: varchar(255)
+  * description: text
+  * trigger_expression: jsonb
+  * action_expression: jsonb
+  * is_active: boolean
+  * created_by: uuid <<FK>>
+}
+
+entity "Тикет поддержки" as ticket {
+  * id: uuid <<PK>>
+  --
+  * title: varchar(255)
+  * description: text
+  * status: enum('open', 'in_progress', 'closed')
+  * priority: enum('low', 'medium', 'high')
+  * created_by: uuid <<FK>>
+  * assigned_to: uuid <<FK>>
+  * created_at: timestamp
+  * closed_at: timestamp
+}
+
+entity "Отзыв" as feedback {
+  * id: uuid <<PK>>
+  --
+  * user_id: uuid <<FK>>
+  * rating: smallint
+  * comment: text
+  * created_at: timestamp
+}
+
+' Связи между сущностями
+user ||--o{ device : "Владеет"
+user ||--o{ device_group : "Создает"
+user ||--o{ automation : "Создает"
+user ||--o{ ticket : "Создает"
+user ||--o{ feedback : "Оставляет"
+
+device_group }o--o{ device : "Содержит"
+device ||--o{ telemetry : "Генерирует"
+
+ticket }|--|| user : "Назначен на"
+ticket }|--|| user : "Создан пользователем"
+
+automation }o--o{ device : "Управляет"
+automation }o--o{ device_group : "Применяется к"
+
+note right of device
+  Индексы:
+  - idx_device_owner (owner_id)
+  - idx_device_status (status)
+end note
+
+note right of telemetry
+  Индексы:
+  - idx_telemetry_device (device_id)
+  - idx_telemetry_timestamp (timestamp)
+end note
+
+
+@enduml

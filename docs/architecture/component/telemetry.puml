@@ -1,0 +1,23 @@
+@startuml TelemetryServiceComponents
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Сервис телеметрии
+
+Container_Boundary(telemetry, "Сервис телеметрии (Go)") {
+    Component(ingest, "Прием данных", "Валидация")
+    Component(aggregator, "Агрегатор", "Предварительная обработка")
+    Component(storage, "Связь с БД", "Запись в TimescaleDB")
+    Component(alert_engine, "Движок алертов", "Правила для аномалий")
+    Component(api, "gRPC API", "Запросы метрик")
+}
+
+ContainerDb(timescale, "TimescaleDB", "Метрики устройств")
+System_Ext(kafka, "Kafka", "События устройств")
+
+Rel(kafka, ingest, "Чтение событий", "")
+Rel(ingest, aggregator, "Сжатие данных", "")
+Rel(aggregator, storage, "Запись", "")
+Rel(storage, timescale, "SQL", "")
+Rel(alert_engine, api, "Уведомления", "gRPC stream")
+
+@enduml

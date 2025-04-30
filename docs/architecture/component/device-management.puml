@@ -1,0 +1,24 @@
+@startuml DeviceServiceComponents
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Сервис управления устройствами
+
+Container_Boundary(device_mgmt, "Сервис управления устройствами (Java/Spring)") {
+    Component(protocol_adapter, "Адаптер протоколов", "Поддержка Zigbee/MQTT/HTTP")
+    Component(discovery, "Обнаружение устройств", "")
+    Component(registry, "Реестр устройств", "Хранение состояния и метаданных")
+    Component(authz, "Авторизация устройств", "Проверка прав доступа")
+    Component(api, "gRPC API", "Интерфейс для других сервисов")
+}
+
+ContainerDb(postgres, "PostgreSQL", "Устройства и пользователи")
+System_Ext(zigbee, "Zigbee-устройства", "Датчики/лампы")
+System_Ext(mqtt, "MQTT-брокер", "Кастомные устройства")
+
+Rel(protocol_adapter, zigbee, "Zigbee2MQTT", "")
+Rel(protocol_adapter, mqtt, "Подписка/публикация", "")
+Rel(registry, postgres, "JDBC", "CRUD операций")
+Rel(api, authz, "Проверка ACL", "JWT")
+Rel(discovery, registry, "Регистрация", "События Kafka")
+
+@enduml
