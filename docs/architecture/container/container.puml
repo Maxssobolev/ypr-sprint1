@@ -17,6 +17,7 @@ System_Boundary(ecosystem, "Экосистема") {
     Container(api, "API Gateway", "", "Маршрутизация запросов")
     Container(device_mgmt, "Сервис управления устройствами", "Java", "Подключение/настройка устройств")
     Container(automation, "Сервис сценариев", "Python", "Выполнение автоматизации")
+    Container(user_service, "Сервис управления пользователями", "Go", "Аутентификация, регистрация, настройки")
     Container(telemetry, "Сервис телеметрии", "Go", "Сбор и анализ данных")
     Container(analytics, "Сервис аналитики", "Python", "Маркетинговая аналитика")
     ContainerDb(db, "База данных", "PostgreSQL", "Хранение пользовательских данных, тикетов")
@@ -24,7 +25,7 @@ System_Boundary(ecosystem, "Экосистема") {
 }
 
 System_Ext(partner_devices, "Устройства партнеров", "Zigbee/MQTT устройства")
-System_Ext(email, "Notification-сервис", "Отправка уведомлений")
+System_Ext(email, "Notification Service", "Отправка уведомлений")
 
 
 Rel(owner, web, "Использует")
@@ -36,15 +37,19 @@ Rel(web, api, "Вызывает API", "HTTPS")
 Rel(web2, api, "Вызывает API", "HTTPS")
 Rel(mobile, api, "Вызывает API", "HTTPS")
 Rel(api, device_mgmt, "gRPC")
+Rel(api, user_service, "gRPC")
 Rel(api, automation, "gRPC")
 Rel(api, telemetry, "gRPC")
 Rel(device_mgmt, partner_devices, "MQTT/Zigbee")
 Rel(device_mgmt, db, "Чтение/запись")
 Rel(telemetry, tsdb, "Запись метрик", "SQL")
 Rel(analytics, tsdb, "Анализ данных", "SQL")
+Rel(api, analytics, "gRPC")
 Rel(api, support, "gRPC")
-Rel(support, email, "Отправляет уведомления", "SMTP")
+Rel(support, email, "Отправляет уведомления")
+Rel(user_service, email, "Отправляет уведомления")
 Rel(support, device_mgmt, "Запрашивает данные устройств", "gRPC")
 Rel(support, db, "Сохраняет тикеты", "SQL")
+Rel(user_service, db, "SQL")
 
 @enduml

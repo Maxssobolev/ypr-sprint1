@@ -11,7 +11,7 @@ System(ecosystem, "Экосистема умных поселков", "SaaS-пл
 
 System_Ext(partner_devices, "Устройства партнеров", "Сторонние IoT устройства")
 System_Ext(payment, "Платежная система", "Внешняя система обработки платежей")
-System_Ext(email, "Notification-сервис", "Отправка уведомлений")
+System_Ext(email, "Notification Service", "Отправка уведомлений")
 
 Rel(owner, ecosystem, "Управляет устройствами, создает сценарии, просматривает телеметрию")
 Rel(admin, ecosystem, "Настраивает систему, анализирует метрики")

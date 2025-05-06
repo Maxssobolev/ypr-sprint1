@@ -15,8 +15,8 @@ ContainerDb(postgres, "PostgreSQL", "Устройства и пользоват�
 System_Ext(zigbee, "Zigbee-устройства", "Датчики/лампы")
 System_Ext(mqtt, "MQTT-брокер", "Кастомные устройства")
 
-Rel(protocol_adapter, zigbee, "Zigbee2MQTT", "")
-Rel(protocol_adapter, mqtt, "Подписка/публикация", "")
+Rel(protocol_adapter, zigbee, "Zigbee2MQTT")
+Rel(protocol_adapter, mqtt, "Подписка/публикация")
 Rel(registry, postgres, "JDBC", "CRUD операций")
 Rel(api, authz, "Проверка ACL", "JWT")
 Rel(discovery, registry, "Регистрация", "События Kafka")

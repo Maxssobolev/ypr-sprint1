@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+service DeviceService {
+    // Метод для получения информации об устройстве
+    rpc GetDevice(DeviceRequest) returns (DeviceResponse);
+    
+    // Метод для регистрации нового устройства
+    rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse);
+}
+
+message DeviceRequest { 
+    string device_id = 1; 
+}
+
+message DeviceResponse { 
+    string id = 1; 
+    string name = 2; 
+    string status = 3; 
+}

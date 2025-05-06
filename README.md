@@ -106,6 +106,7 @@
 
 **Диаграмма компонентов (Components)**
 
+- [Сервис управления пользователями](./docs/architecture/component/users.puml)
 - [Сервис управления устройствами](./docs/architecture/component/device-management.puml)
 - [Сервис управления сценариями](./docs/architecture/component/automation.puml)
 - [Сервис телеметрии](./docs/architecture/component/telemetry.puml)
@@ -125,11 +126,16 @@
 
 ### 1. Тип API
 
-Укажите, какой тип API вы будете использовать для взаимодействия микросервисов. Объясните своё решение.
+Для взаимодействия микросервисов выбрал gRPC, так как он наиболее удобен для внутренней коммуникации, обеспечивает высокую производительность, поддержку потоковой передачи данных и строгую типизацию через Protocol Buffers.
+(Я раньше не использовал этот подход, но постарался сообразить пару proto-контрактов)
+
+Для взаимодействия с внешними клиентами выбрал REST из-за его простоты и совместимости с браузерами.
 
 ### 2. Документация API
 
-Здесь приложите ссылки на документацию API для микросервисов, которые вы спроектировали в первой части проектной работы. Для документирования используйте Swagger/OpenAPI или AsyncAPI.
+- [Swagger](./docs/swagger/swagger.yml)
+- [Device Service Proto](./protos/device_service.proto)
+- [Telemetry Service Proto](./protos/telemetry_service.proto)
 
 # Задание 5. Работа с docker и docker-compose
 

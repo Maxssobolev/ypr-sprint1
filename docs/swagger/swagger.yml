@@ -1,0 +1,209 @@
+openapi: 3.0.0
+info:
+  title: Умный дом API
+  version: 1.0.0
+
+security:
+  - BearerAuth: []
+
+paths:
+  /users/login:
+    post:
+      tags: [Users]
+      summary: Аутентификация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+      responses:
+        200:
+          description: Возвращает токен
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+      security: []
+
+  /users/reg:
+    post:
+      tags: [Users]
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegRequest"
+      responses:
+        200:
+          description: Возвращает токен
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+      security: []
+
+  /support/tickets:
+    post:
+      tags: [Support]
+      summary: Создать тикет
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TicketRequest"
+      responses:
+        201:
+          description: Тикет создан
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketResponse"
+
+  /analytics/reports:
+    get:
+      tags: [Analytics]
+      summary: Получить отчет
+      parameters:
+        - name: device_id
+          in: query
+          required: true
+          schema: { type: string }
+        - name: start_date
+          in: query
+          schema: { type: string, format: date }
+        - name: end_date
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        200:
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+
+  /automation/scenarios:
+    get:
+      tags: [Automation]
+      summary: Получить список сценариев
+      responses:
+        "200":
+          description: Сценарии
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scenario"
+    post:
+      tags: [Automation]
+      summary: Создать сценарий
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Scenario"
+      responses:
+        201:
+          description: Сценарий создан
+
+  /devices:
+    get:
+      tags: [Gateway]
+      summary: Получить список устройств
+      responses:
+        200:
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+
+  /devices/{id}:
+    get:
+      tags: [Gateway]
+      summary: Получить устройство по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Устройство
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegRequest:
+      type: object
+      properties:
+        login: { type: string }
+        pass: { type: string }
+        phone: { type: string }
+        full_name: { type: string }
+
+    AuthResponse:
+      type: object
+      properties:
+        id: { type: string }
+        token: { type: string }
+
+    AuthRequest:
+      type: object
+      properties:
+        login: { type: string }
+        pass: { type: string }
+
+    TicketRequest:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        priority: { type: string, enum: [low, normal, high] }
+      required: [title, priority]
+
+    TicketResponse:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string }
+
+    Report:
+      type: object
+      properties:
+        period: { type: string }
+        metrics: { type: array, items: { type: number } }
+
+    Scenario:
+      type: object
+      properties:
+        devices_ids: { type: array, items: { type: string } }
+        name: { type: string }
+        trigger: { type: object }
+        action: { type: object }
+
+    Device:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        status: { type: string }

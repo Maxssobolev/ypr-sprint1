@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+service TelemetryService {
+  // Получение метрики
+  rpc GetMetrics(MetricsRequest) returns (stream MetricsResponse);
+}
+
+message MetricsRequest { 
+    string device_id = 1; 
+    int64 start_time = 2; 
+    int64 end_time = 3; 
+}
