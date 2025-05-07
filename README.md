@@ -95,28 +95,51 @@
 
 
 ### 5. Визуализация контекста системы — диаграмма С4
+[Диаграмма контекста](./docs/architecture/context/context.puml)
 
-- [Диаграмма контекста](./docs/architecture/context/context.puml)
+![Диаграмма контекста](./docs-out/docs/architecture/context/context/ContextDiagram.png "Диаграмма")
 
 # Задание 2. Проектирование микросервисной архитектуры
 
-**Диаграмма контейнеров (Containers)**
+[**Диаграмма контейнеров (Containers)**](./docs/architecture/container/container.puml)
 
-- [Диаграмма контейнеров](./docs/architecture/container/container.puml)
+![Диаграмма контейнеров](./docs-out/docs/architecture/container/container/ContainersDiagram.png)
 
 **Диаграмма компонентов (Components)**
 
-- [Сервис управления пользователями](./docs/architecture/component/users.puml)
-- [Сервис управления устройствами](./docs/architecture/component/device-management.puml)
-- [Сервис управления сценариями](./docs/architecture/component/automation.puml)
-- [Сервис телеметрии](./docs/architecture/component/telemetry.puml)
-- [Сервис аналитики](./docs/architecture/component/analytics.puml)
-- [Сервис поддержки](./docs/architecture/component/support.puml)
-- [API Gateway](./docs/architecture/component/api-gateway.puml)
+[Сервис управления пользователями](./docs/architecture/component/users.puml)
+
+![Сервис управления пользователями](./docs-out/docs/architecture/component/users/UsersServiceComponents.png)
+
+[Сервис управления устройствами](./docs/architecture/component/device-management.puml)
+
+![Сервис управления устройствами](./docs-out/docs/architecture/component/device-management/DeviceServiceComponents.png)
+
+[Сервис управления сценариями](./docs/architecture/component/automation.puml)
+
+![Сервис управления сценариями](./docs-out/docs/architecture/component/automation/AutomationServiceComponents.png)
+
+[Сервис телеметрии](./docs/architecture/component/telemetry.puml)
+
+![Сервис телеметрии](./docs-out/docs/architecture/component/telemetry/TelemetryServiceComponents.png)
+
+[Сервис аналитики](./docs/architecture/component/analytics.puml)
+
+![Сервис аналитики](/out/docs/architecture/component/analytics/AnalyticsServiceComponents.png)
+
+[Сервис поддержки](./docs/architecture/component/support.puml)
+
+![Сервис поддержки](./docs-out/docs/architecture/component/support/SupportServiceComponents.png)
+
+[API Gateway](./docs/architecture/component/api-gateway.puml)
+
+![API Gateway](./docs-out/docs/architecture/component/api-gateway/GoAPIGateway.png)
 
 **Диаграмма кода (Code)**
 
-- [API Gateway](./docs/architecture/code/api-gateway.puml)
+[API Gateway](./docs/architecture/code/api-gateway.puml)
+
+![API Gateway](./docs-out/docs/architecture/code/api-gateway/APIGateway_Code_Diagram.png)
 
 # Задание 3. Разработка ER-диаграммы
 
@@ -139,57 +162,6 @@
 
 # Задание 5. Работа с docker и docker-compose
 
-Перейдите в apps.
-
-Там находится приложение-монолит для работы с датчиками температуры. В README.md описано как запустить решение.
-
-Вам нужно:
-
-1) сделать простое приложение temperature-api на любом удобном для вас языке программирования, которое при запросе /temperature?location= будет отдавать рандомное значение температуры.
-
-Locations - название комнаты, sensorId - идентификатор названия комнаты
-
-```
-	// If no location is provided, use a default based on sensor ID
-	if location == "" {
-		switch sensorID {
-		case "1":
-			location = "Living Room"
-		case "2":
-			location = "Bedroom"
-		case "3":
-			location = "Kitchen"
-		default:
-			location = "Unknown"
-		}
-	}
-
-	// If no sensor ID is provided, generate one based on location
-	if sensorID == "" {
-		switch location {
-		case "Living Room":
-			sensorID = "1"
-		case "Bedroom":
-			sensorID = "2"
-		case "Kitchen":
-			sensorID = "3"
-		default:
-			sensorID = "0"
-		}
-	}
-```
-
-2) Приложение следует упаковать в Docker и добавить в docker-compose. Порт по умолчанию должен быть 8081
-
-3) Кроме того для smart_home приложения требуется база данных - добавьте в docker-compose файл настройки для запуска postgres с указанием скрипта инициализации ./smart_home/init.sql
-
-Для проверки можно использовать Postman коллекцию smarthome-api.postman_collection.json и вызвать:
-
-- Create Sensor
-- Get All Sensors
-
-Должно при каждом вызове отображаться разное значение температуры
-
-Ревьюер будет проверять точно так же.
+- Реализован простой http сервер на Go. 
 
 
