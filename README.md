@@ -125,7 +125,7 @@
 
 [Сервис аналитики](./docs/architecture/component/analytics.puml)
 
-![Сервис аналитики](/out/docs/architecture/component/analytics/AnalyticsServiceComponents.png)
+![Сервис аналитики](./docs-out/docs/architecture/component/analytics/AnalyticsServiceComponents.png)
 
 [Сервис поддержки](./docs/architecture/component/support.puml)
 
@@ -143,7 +143,9 @@
 
 # Задание 3. Разработка ER-диаграммы
 
-- [ERD](./docs/architecture/erd/erd.puml)
+[ERD](./docs/architecture/erd/erd.puml)
+
+![ERD](./docs-out/docs/architecture/erd/erd/ER_Diagram.png)
 
 # Задание 4. Создание и документирование API
 
