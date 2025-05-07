@@ -1,0 +1,23 @@
+@startuml AutomationServiceComponents
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Сервис сценариев
+
+Container_Boundary(automation, "Сервис сценариев (Python)") {
+    Component(parser, "Парсер DSL", "Валидация правил")
+    Component(engine, "Движок выполнения", "Интерпретация сценариев")
+    Component(trigger, "Менеджер триггеров", "Обработка событий")
+    Component(api, "REST/gRPC API", "Управление сценариями")
+    Component(metrics, "Метрики", "Логирование выполнения")
+}
+
+ContainerDb(postgres, "PostgreSQL", "Сценарии")
+System_Ext(kafka, "Kafka", "События устройств")
+System_Ext(redis, "Redis", "Кеш состояний")
+
+Rel(kafka, trigger, "Подписка на события")
+Rel(engine, redis, "Кеш переменных", "SET/GET")
+Rel(parser, postgres, "Сохранение сценариев", "SQLAlchemy")
+Rel(metrics, api, "Отчеты")
+
+@enduml

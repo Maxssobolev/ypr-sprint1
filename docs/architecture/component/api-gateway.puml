@@ -1,0 +1,24 @@
+@startuml GoAPIGateway
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title API Gateway
+
+Container_Boundary(gateway, "API Gateway (Go)") {
+    Component(router, "Роутер", "chi", "Маршрутизация запросов")
+    Component(auth, "Аутентификация", "JWT-верификация")
+    Component(grpc_client, "gRPC-клиент", "Подключение к сервисам")
+    Component(cache, "Кеш", "Redis")
+}
+
+System_Ext(frontend, "Веб-приложение", "Angular")
+System_Ext(device_service, "Сервис управления устройствами", "gRPC")
+System_Ext(auth_service, "Сервис аутентификации", "OAuth2")
+
+Rel(frontend, router, "HTTPS")
+Rel(router, auth, "Проверка токена")
+Rel(auth, grpc_client, "gRPC-вызов")
+Rel(grpc_client, device_service, "")
+Rel(cache, router, "Кеширование ответов")
+Rel(auth, auth_service, "Валидация токена", "REST")
+
+@enduml

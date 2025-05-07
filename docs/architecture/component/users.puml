@@ -1,0 +1,26 @@
+@startuml UsersServiceComponents
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Сервис управления пользователями
+
+Container_Boundary(user_service, "User Service (Go)") {
+    Component(api, "gRPC API", "Интерфейс для других сервисов")
+    Component(auth, "Auth Module", "JWT", "Аутентификация и авторизация")
+    Component(profile, "Profile Manager", "Управление профилями")
+    Component(roles, "Role Manager", "Управление ролями и правами")
+    Component(notifier, "Notifier", "Отправка уведомлений (email)")
+}
+
+ContainerDb(postgres, "PostgreSQL", "Устройства и пользователи")
+System_Ext(api_gateway, "API Gateway", "REST/gRPC")
+System_Ext(email_service, "Notification Service")
+
+Rel(api_gateway, api, "Перенаправляет запросы", "HTTPS")
+Rel(api, auth, "Проверка токенов")
+Rel(auth, postgres, "Валидация сессий", "SQL")
+Rel(profile, postgres, "CRUD операций", "SQL")
+Rel(roles, postgres, "Чтение/запись прав", "SQL")
+Rel(notifier, email_service, "Отправка писем")
+Rel(api, notifier, "Триггерит уведомления", "Internal Event")
+
+@enduml
